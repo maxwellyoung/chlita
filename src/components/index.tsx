@@ -59,14 +59,12 @@ export function Index() {
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
-      <header className="fixed top-0 left-0 w-full z-50 p-4 flex flex-col sm:flex-row justify-between items-center bg-white border-b border-black">
-        <div className="flex justify-between items-center w-full sm:w-auto">
-          <div className="text-sm">{currentTime}</div>
-          <h1 className="text-lg font-bold text-center sm:text-left sm:ml-4">
-            CH&apos;LITA
-          </h1>
-        </div>
-        <nav className="mt-4 sm:mt-0 space-x-4 text-sm">
+      <header className="fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center bg-white border-b border-black">
+        <div className="text-sm">{currentTime}</div>
+        <h1 className="text-lg font-bold hidden sm:block sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2">
+          CH&apos;LITA
+        </h1>
+        <nav className="space-x-4 text-sm">
           <a href="#work" className="hover:underline">
             WORK
           </a>

@@ -2,11 +2,26 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const authenticSans = localFont({
-  src: "../../public/fonts/authentic-sans-60.woff2",
-  variable: "--font-authentic-sans",
-  preload: true,
+const jost = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Jost-400-Book.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Jost-500-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Jost-700-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   display: "swap",
+  preload: true,
 });
 
 export const viewport: Viewport = {
@@ -97,7 +112,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${authenticSans.variable}`}>
+    <html lang="en" className={`${jost.className}`}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

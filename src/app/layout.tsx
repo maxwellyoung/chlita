@@ -2,9 +2,30 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const authenticSans = localFont({
-  src: "../../public/fonts/authentic-sans-60.woff2",
-  variable: "--font-authentic-sans",
+const jost = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Jost-400-Book.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Jost-500-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Jost-600-Semi.ttf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Jost-700-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-futura",
   preload: true,
   display: "swap",
 });
@@ -18,7 +39,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chlita.com"), // Replace with your actual domain
+  metadataBase: new URL("https://chlita.com"),
   title: {
     default: "Ch'lita | London-based Fashion Stylist & Consultant",
     template: "%s | Ch'lita",
@@ -75,7 +96,7 @@ export const metadata: Metadata = {
     title: "Ch'lita | London-based Fashion Stylist & Consultant",
     description:
       "Professional fashion stylist and consultant based in London, offering personalized styling services and wardrobe consultation.",
-    creator: "@chlita", // Replace with actual Twitter handle
+    creator: "@chlita",
     images: ["/chlitacorp.png"], // Add your Twitter card image
   },
   robots: {
@@ -97,7 +118,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${authenticSans.variable}`}>
+    <html lang="en" className={`${jost.className}`}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

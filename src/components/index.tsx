@@ -86,6 +86,7 @@ export function Index() {
             width={500}
             height={500}
             className="mb-8"
+            priority
           />
 
           <p className="text-xl md:text-2xl text-center max-w-2xl">
@@ -182,10 +183,10 @@ export function Index() {
             <div className="space-y-4 text-xl">
               <p>For inquiries and collaborations:</p>
               <a
-                href="mailto:vision@chlita.com"
+                href="mailto:info@chlita.com"
                 className="block hover:underline"
               >
-                vision@chlita.com
+                info@chlita.com
               </a>
               <a
                 href="https://instagram.com/chlita"

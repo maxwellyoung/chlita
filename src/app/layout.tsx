@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Head from "next/head";
 
 const authenticSans = localFont({
   src: "../../public/fonts/authentic-sans-60.woff2",
@@ -10,20 +9,36 @@ const authenticSans = localFont({
 
 export const metadata: Metadata = {
   title: "Ch'lita",
-  description: "Ch’lita is a stylist and consultant based in London.",
+  description: "Ch'lita is a stylist and consultant based in London.",
+  icons: {
+    icon: "./favicon.ico",
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <body className={`${authenticSans.variable} antialiased`}>
+      <head>
+        <link
+          rel="icon"
+          type="image/png"
+          href="/favicon-96x96.png"
+          sizes="96x96"
+        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+      <body className={`${authenticSans.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

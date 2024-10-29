@@ -167,35 +167,59 @@ export function Index() {
         <section id="about" className="py-24 px-4 bg-black text-white">
           <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold mb-8">ABOUT CH&apos;LITA</h3>
-            <p className="text-xl leading-relaxed">
-              With an avant-garde approach and an eye for the extraordinary,
-              Ch&apos;lita&apos;s work is a fusion of art, culture, and
-              innovation. Her unique vision transforms ordinary shoots into
-              extraordinary narratives, challenging perceptions and defining new
-              eras in fashion.
-            </p>
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="w-full md:w-1/2">
+                <p className="text-xl leading-relaxed">
+                  With an avant-garde approach and an eye for the extraordinary,
+                  Ch&apos;lita&apos;s work is a fusion of art, culture, and
+                  innovation. Her unique vision transforms ordinary shoots into
+                  extraordinary narratives, challenging perceptions and defining
+                  new eras in fashion.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <Image
+                  src="/F1000011.webp"
+                  alt="Ch'lita portrait"
+                  width={500}
+                  height={750}
+                  className="w-full h-auto object-cover rounded-lg"
+                />
+              </div>
+            </div>
           </div>
         </section>
 
         <section id="contact" className="py-24 px-4">
           <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold mb-8">GET IN TOUCH</h3>
-            <div className="space-y-4 text-xl">
-              <p>For inquiries and collaborations:</p>
-              <a
-                href="mailto:info@chlita.com"
-                className="block hover:underline"
-              >
-                info@chlita.com
-              </a>
-              <a
-                href="https://instagram.com/chlita"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block hover:underline"
-              >
-                @chlita
-              </a>
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="w-full md:w-1/3">
+                <Image
+                  src="/CHLITAICON.webp"
+                  alt="Ch'lita logo"
+                  width={300}
+                  height={300}
+                  className="w-full h-auto"
+                />
+              </div>
+              <div className="w-full md:w-2/3 space-y-4 text-xl">
+                <p>For inquiries and collaborations:</p>
+                <a
+                  href="mailto:info@chlita.com"
+                  className="block hover:underline"
+                >
+                  info@chlita.com
+                </a>
+                <a
+                  href="https://instagram.com/chlita"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block hover:underline"
+                >
+                  @chlita
+                </a>
+              </div>
             </div>
           </div>
         </section>

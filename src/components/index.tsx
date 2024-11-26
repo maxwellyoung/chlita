@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { client } from "../../sanity";
 import Link from "next/link";
+import { AnimatedNumber } from "./animated-number";
 
 interface Project {
   _id: string;
@@ -82,24 +83,33 @@ export function Index() {
 
 function Header({ currentTime }: { currentTime: string }) {
   return (
-    <header className="fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center bg-white border-b border-black">
-      <div className="text-sm" aria-live="polite" aria-atomic="true">
-        {currentTime}
+    <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-black">
+      <div className="relative flex items-center">
+        <div className="absolute left-0 px-4 py-2 text-sm border-r border-black">
+          {currentTime}
+        </div>
+        <div className="w-full flex justify-center items-center px-4 py-2">
+          <h1 className="text-sm">
+            <Link href="/" className="hover:underline">
+              CH&apos;LITA
+            </Link>
+          </h1>
+        </div>
+        <nav className="absolute right-0 border-l border-black">
+          <ul className="flex text-sm">
+            {["WORK", "ABOUT", "CONTACT"].map((item) => (
+              <li key={item} className="border-r border-black last:border-r-0">
+                <Link
+                  href={`#${item.toLowerCase()}`}
+                  className="px-4 py-2 hover:underline block"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-      <h1 className="text-lg font-bold hidden sm:block sm:absolute sm:left-1/2 sm:transform sm:-translate-x-1/2">
-        CH&apos;LITA
-      </h1>
-      <nav>
-        <ul className="flex space-x-4 text-sm">
-          {["work", "about", "contact"].map((item) => (
-            <li key={item}>
-              <a href={`#${item}`} className="hover:underline">
-                {item.toUpperCase()}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
     </header>
   );
 }
@@ -174,6 +184,43 @@ function ProjectsSection({
   );
 }
 
+function ProjectImage({
+  src,
+  alt,
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  priority?: boolean;
+}) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <div className="relative w-full h-full">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-neutral-50">
+          <div className="w-4 h-4 border-2 border-neutral-200 border-t-neutral-400 rounded-full animate-spin" />
+        </div>
+      )}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Image
+          src={src}
+          alt={alt}
+          width={1200}
+          height={800}
+          className="w-full h-full object-contain"
+          onLoadingComplete={() => setIsLoading(false)}
+          priority={priority}
+        />
+      </motion.div>
+    </div>
+  );
+}
+
 function ProjectModal({
   activeProject,
   setActiveProject,
@@ -181,42 +228,102 @@ function ProjectModal({
   activeProject: Project | null;
   setActiveProject: (project: Project | null) => void;
 }) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(1);
+  const [cursorPosition, setCursorPosition] = useState<"left" | "right">(
+    "left"
+  );
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const scrollPosition = container.scrollTop;
+    const imageHeight = container.clientHeight;
+    const newIndex = Math.floor(scrollPosition / imageHeight) + 1;
+    setCurrentImageIndex(newIndex);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, currentTarget } = e;
+    const { width } = currentTarget.getBoundingClientRect();
+    setCursorPosition(clientX < width / 2 ? "left" : "right");
+  };
+
   return (
     <AnimatePresence>
       {activeProject && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-white z-50 overflow-auto p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="project-title"
+          className={`fixed inset-0 bg-white z-50 ${
+            cursorPosition === "left"
+              ? 'cursor-[url("/cursor-left.svg"),_w-resize]'
+              : 'cursor-[url("/cursor-right.svg"),_e-resize]'
+          }`}
+          onMouseMove={handleMouseMove}
         >
-          <button
-            onClick={() => setActiveProject(null)}
-            className="mb-4 text-sm hover:underline"
-            aria-label="Close project details"
+          <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-black">
+            <div className="relative h-[41px]">
+              <button
+                onClick={() => setActiveProject(null)}
+                className="absolute left-0 h-full px-4 py-2 text-sm border-r border-black hover:underline"
+              >
+                Back
+              </button>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-sm">
+                <Link href="/" className="hover:underline">
+                  CH&apos;LITA
+                </Link>
+                <span className="text-neutral-400 mx-2">/</span>
+                <span>{activeProject.title}</span>
+              </div>
+              <nav className="absolute right-0 h-full border-l border-black">
+                <ul className="flex text-sm">
+                  {["WORK", "ABOUT", "CONTACT"].map((item) => (
+                    <li
+                      key={item}
+                      className="border-r border-black last:border-r-0"
+                    >
+                      <Link
+                        href={`#${item.toLowerCase()}`}
+                        className="px-4 py-2 hover:underline block"
+                      >
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+            <div className="absolute right-0 h-full flex items-center text-sm border-l border-black">
+              <div className="px-4 py-2">
+                <AnimatedNumber value={currentImageIndex} />
+                {" / "}
+                {activeProject.images.length}
+              </div>
+            </div>
+          </header>
+
+          <div
+            className="h-screen overflow-y-auto snap-y snap-mandatory pt-[41px]"
+            onScroll={handleScroll}
           >
-            ← BACK
-          </button>
-          <h2 id="project-title" className="text-4xl font-bold mb-2">
-            {activeProject.title}
-          </h2>
-          <p className="text-xl mb-6">{activeProject.category}</p>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeProject.images.map((imageUrl, index) => (
-              <li key={index}>
-                <Image
+            <div className="h-screen w-full snap-start flex items-center justify-center p-4">
+              <ProjectImage
+                src={activeProject.images[0]}
+                alt={`${activeProject.title} cover`}
+                priority
+              />
+            </div>
+
+            {activeProject.images.slice(1).map((imageUrl, index) => (
+              <div
+                key={index}
+                className="h-screen w-full snap-start flex items-center justify-center p-4"
+              >
+                <ProjectImage
                   src={imageUrl}
-                  alt={`${activeProject.title} ${index + 1}`}
-                  width={800}
-                  height={1000}
-                  className="w-full h-auto object-cover"
+                  alt={`${activeProject.title} ${index + 2}`}
                 />
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

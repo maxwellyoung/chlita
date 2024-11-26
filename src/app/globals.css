@@ -67,3 +67,14 @@
     @apply bg-background text-foreground font-sans;
   }
 }
+
+@layer utilities {
+  .snap-y {
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .snap-start {
+    scroll-snap-align: start;
+  }
+}

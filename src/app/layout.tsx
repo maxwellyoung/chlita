@@ -97,7 +97,7 @@ export const metadata: Metadata = {
     description:
       "Professional fashion stylist and consultant based in London, offering personalized styling services and wardrobe consultation.",
     creator: "@chlita",
-    images: ["/chlitacorp.png"], // Add your Twitter card image
+    images: ["/chlitacorp.png"], 
   },
   robots: {
     index: true,

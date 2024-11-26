@@ -122,7 +122,7 @@ export function ProjectModal({
         onClick={handleClick}
       >
         <header className="fixed top-0 left-0 w-full z-50 bg-white">
-          <div className="grid grid-cols-[auto,1fr,auto] h-[41px] border-b border-black">
+          <div className="grid grid-cols-[auto,1fr,auto] md:grid-cols-[auto,1fr,auto] h-auto md:h-[41px] border-b border-black">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -132,24 +132,24 @@ export function ProjectModal({
             >
               Back
             </button>
-            <div className="flex justify-center items-center text-sm">
+            <div className="flex justify-center items-center text-sm py-2 md:py-0">
               <Link href="/" className="hover:underline">
                 CH&apos;LITA
               </Link>
               <span className="text-neutral-400 mx-2">/</span>
               <span>{activeProject.title}</span>
             </div>
-            <div className="flex border-l border-black">
-              <nav className="border-r border-black h-full">
-                <ul className="flex h-full text-sm">
+            <div className="flex flex-col md:flex-row border-l border-black h-full">
+              <nav className="border-b md:border-b-0 md:border-r border-black w-full md:w-auto hidden md:block h-full">
+                <ul className="flex flex-wrap md:flex-nowrap h-full text-sm">
                   {["WORK", "ABOUT", "CONTACT"].map((item) => (
                     <li
                       key={item}
-                      className="border-r border-black last:border-r-0 h-full"
+                      className="border-r border-black last:border-r-0 h-full flex"
                     >
                       <Link
                         href={`#${item.toLowerCase()}`}
-                        className="px-4 py-2 hover:underline h-full flex items-center"
+                        className="px-4 py-2 hover:underline flex items-center"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {item}
@@ -158,7 +158,7 @@ export function ProjectModal({
                   ))}
                 </ul>
               </nav>
-              <div className="px-4 py-2 text-sm flex items-center">
+              <div className="px-4 py-2 text-sm flex items-center justify-center md:justify-start h-full">
                 <AnimatedNumber value={currentImageIndex + 1} />
                 {" / "}
                 {activeProject.images.length}
@@ -169,7 +169,7 @@ export function ProjectModal({
 
         <div
           ref={containerRef}
-          className="h-screen overflow-y-auto snap-y snap-mandatory pt-[41px]"
+          className="h-screen overflow-y-auto snap-y snap-mandatory pt-[82px] md:pt-[41px]"
           onScroll={handleScroll}
         >
           {activeProject.images.map((imageUrl, index) => (

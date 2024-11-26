@@ -160,7 +160,7 @@ export function ProjectModal({
               </nav>
               <div className="px-4 py-2 text-sm flex items-center justify-center md:justify-start h-full">
                 <AnimatedNumber value={currentImageIndex + 1} />
-                {" / "}
+                {"/"}
                 {activeProject.images.length}
               </div>
             </div>

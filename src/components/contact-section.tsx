@@ -4,7 +4,7 @@ export function ContactSection() {
   return (
     <section id="contact" className="py-24 px-4">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold mb-8">GET IN TOUCH</h2>
+        {/* <h2 className="text-2xl font-bold mb-8">GET IN TOUCH</h2> */}
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="w-full md:w-1/3">
             <Image

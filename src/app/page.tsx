@@ -15,7 +15,7 @@ export interface Project {
   title: string;
   category: string;
   images: string[];
-  date?: string; // Optional custom date field
+  createdAt?: string; // Optional manually-set date field
   _createdAt: string; // Sanity's automatic creation timestamp
 }
 
@@ -25,6 +25,7 @@ export default function Home() {
   const [currentTime, setCurrentTime] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  // Update the current time every second
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -40,6 +41,7 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  // Fetch projects from Sanity
   const fetchProjects = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -49,19 +51,20 @@ export default function Home() {
           title,
           category,
           "images": images[].asset->url,
-          date,
+          createdAt,
           _createdAt
         }
       `);
       setProjects(result);
     } catch (error) {
       console.error("Error fetching projects:", error);
-      // Handle the error, e.g., show an error message to the user
+      // Optionally handle the error, e.g., show a notification or fallback UI
     } finally {
       setIsLoading(false);
     }
   }, []);
 
+  // Fetch projects on component mount
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);

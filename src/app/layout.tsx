@@ -78,10 +78,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     url: "https://chlita.com",
+    siteName: "Ch'lita",
     title: "Ch'lita | London-based Fashion Stylist & Consultant",
     description:
       "Professional fashion stylist and consultant based in London, offering personalized styling services and wardrobe consultation.",
-    siteName: "Ch'lita",
     images: [
       {
         url: "/chlitacorp.png",
@@ -97,7 +97,10 @@ export const metadata: Metadata = {
     description:
       "Professional fashion stylist and consultant based in London, offering personalized styling services and wardrobe consultation.",
     creator: "@chlita",
-    images: ["/chlitacorp.png"], 
+    images: ["/chlitacorp.png"],
+  },
+  alternates: {
+    canonical: "https://chlita.com",
   },
   robots: {
     index: true,

@@ -11,15 +11,15 @@ export function ProjectsSection({
   isLoading: boolean;
   setActiveProject: (project: Project) => void;
 }) {
-  // Sort projects using `date` if available, otherwise fallback to `_createdAt`
+  // Sort projects using `createdAt`, fallback to `_createdAt`
   const sortedProjects = [...projects].sort((a, b) => {
-    const dateA = a.date
-      ? new Date(a.date).getTime()
+    const dateA = a.createdAt
+      ? new Date(a.createdAt).getTime()
       : new Date(a._createdAt).getTime();
-    const dateB = b.date
-      ? new Date(b.date).getTime()
+    const dateB = b.createdAt
+      ? new Date(b.createdAt).getTime()
       : new Date(b._createdAt).getTime();
-    return dateB - dateA; // Sort descending (most recent first)
+    return dateB - dateA; // Most recent first
   });
 
   return (

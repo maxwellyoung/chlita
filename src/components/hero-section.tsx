@@ -12,8 +12,7 @@ export function HeroSection() {
         priority
       />
       <p className="text-xl md:text-2xl text-center max-w-2xl">
-        Ch&apos;lita is a London-based stylist pushing the boundaries of fashion
-        and visual storytelling.
+        Ch&apos;lita is a London-based stylist.
       </p>
     </section>
   );

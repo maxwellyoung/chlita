@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { GTMScript } from "@/components/gtm-script";
+import { GTMNoscript } from "@/components/gtm-noscript";
 
 const jost = localFont({
   src: [
@@ -122,7 +124,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${jost.className}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <GTMNoscript />
+        <GTMScript />
+        {children}
+      </body>
     </html>
   );
 }

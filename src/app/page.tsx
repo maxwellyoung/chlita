@@ -15,7 +15,8 @@ export interface Project {
   title: string;
   category: string;
   images: string[];
-  date?: string; // Make date optional
+  date?: string; // Optional custom date field
+  _createdAt: string; // Sanity's automatic creation timestamp
 }
 
 export default function Home() {
@@ -48,7 +49,8 @@ export default function Home() {
           title,
           category,
           "images": images[].asset->url,
-          date
+          date,
+          _createdAt
         }
       `);
       setProjects(result);

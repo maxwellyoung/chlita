@@ -8,7 +8,12 @@ export function AboutSection() {
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="w-full md:w-1/2">
             <p className="text-xl leading-relaxed">
-              Stylist, consultant, and creative director based in London.
+              Ch’lita is a stylist who excels at creating images that resonate
+              with today’s visual culture. With a keen understanding of what
+              captures attention now, combined with a deep knowledge of fashion
+              history. What sets her work apart is the ability to blend modern
+              relevance with a rich understanding of fashion’s past, producing
+              images that feel both current and enduring.
             </p>
           </div>
           <div className="w-full md:w-1/2">

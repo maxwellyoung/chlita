@@ -1,10 +1,16 @@
 import Link from "next/link";
+import { Menu } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Header({ currentTime }: { currentTime: string }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-black">
+      {/* Main header bar */}
       <div className="relative flex items-center h-[41px]">
-        <div className="absolute left-0 px-2 sm:px-4 py-2 text-xs sm:text-sm border-r border-black h-full flex items-center">
+        <div className="absolute left-0 px-2 py-2 text-xs border-r border-black h-full flex items-center">
           {currentTime}
         </div>
         <div className="w-full flex justify-center items-center px-4 py-2 h-full">
@@ -14,8 +20,17 @@ export function Header({ currentTime }: { currentTime: string }) {
             </Link>
           </h1>
         </div>
-        <nav className="absolute right-0 border-l border-black h-full">
-          <ul className="flex text-xs sm:text-sm h-full">
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="absolute right-0 px-3 h-full border-l border-black md:hidden"
+          aria-label="Toggle menu"
+        >
+          <Menu size={18} />
+        </button>
+        {/* Desktop navigation */}
+        <nav className="absolute right-0 border-l border-black h-full hidden md:block">
+          <ul className="flex text-sm h-full">
             {["WORK", "ABOUT", "CONTACT"].map((item) => (
               <li
                 key={item}
@@ -23,7 +38,7 @@ export function Header({ currentTime }: { currentTime: string }) {
               >
                 <Link
                   href={`#${item.toLowerCase()}`}
-                  className="px-2 sm:px-4 py-2 hover:underline flex items-center"
+                  className="px-4 py-2 hover:underline flex items-center"
                 >
                   {item}
                 </Link>
@@ -32,6 +47,46 @@ export function Header({ currentTime }: { currentTime: string }) {
           </ul>
         </nav>
       </div>
+
+      {/* Mobile navigation overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden border-t border-black bg-white overflow-hidden"
+          >
+            <motion.ul
+              initial={{ y: -20 }}
+              animate={{ y: 0 }}
+              exit={{ y: -20 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="flex flex-col text-sm"
+            >
+              {["WORK", "ABOUT", "CONTACT"].map((item) => (
+                <motion.li
+                  key={item}
+                  className="border-b border-black last:border-b-0"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
+                  <Link
+                    href={`#${item.toLowerCase()}`}
+                    className="px-4 py-3 hover:underline flex items-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item}
+                  </Link>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

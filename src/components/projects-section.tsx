@@ -19,10 +19,6 @@ export function ProjectsSection({
 }) {
   const [viewType, setViewType] = useState<ViewType>("grid");
 
-  const handleHomeClick = () => {
-    setActiveProject(null);
-  };
-
   // Sort projects using `createdAt`, fallback to `_createdAt`
   const sortedProjects = [...projects].sort((a, b) => {
     const dateA = a.createdAt
@@ -37,12 +33,7 @@ export function ProjectsSection({
   return (
     <section id="work" className="py-24 px-4">
       <div className="flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
-        <h2
-          className="text-2xl font-bold cursor-pointer hover:opacity-70 transition-opacity"
-          onClick={handleHomeClick}
-        >
-          SELECTED WORKS
-        </h2>
+        <h2 className="text-2xl font-bold">SELECTED WORKS</h2>
         <div className="flex gap-4">
           <button
             onClick={() => setViewType("grid")}

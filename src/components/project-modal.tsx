@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedNumber } from "./animated-number";
 import { Project } from "../app/page";
@@ -142,28 +141,8 @@ export function ProjectModal({
               >
                 CH&apos;LITA
               </button>
-              <span className="text-neutral-400 mx-2">/</span>
-              <span>{activeProject.title}</span>
             </div>
             <div className="flex flex-col md:flex-row border-l border-black h-full">
-              <nav className="border-b md:border-b-0 md:border-r border-black w-full md:w-auto hidden md:block h-full">
-                <ul className="flex flex-wrap md:flex-nowrap h-full text-sm">
-                  {["WORK", "ABOUT", "CONTACT"].map((item) => (
-                    <li
-                      key={item}
-                      className="border-r border-black last:border-r-0 h-full flex"
-                    >
-                      <Link
-                        href={`#${item.toLowerCase()}`}
-                        className="px-4 py-2 hover:underline flex items-center"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {item}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
               <div className="px-4 py-2 text-sm flex items-center justify-center md:justify-start h-full">
                 <AnimatedNumber value={currentImageIndex + 1} />
                 {"/"}
@@ -173,9 +152,15 @@ export function ProjectModal({
           </div>
         </header>
 
+        <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t border-black">
+          <div className="px-4 py-2 text-center">
+            <h2 className="text-sm">{activeProject.title}</h2>
+          </div>
+        </div>
+
         <div
           ref={containerRef}
-          className="h-screen overflow-y-auto snap-y snap-mandatory pt-[82px] md:pt-[41px]"
+          className="h-screen overflow-y-auto snap-y snap-mandatory pt-[82px] md:pt-[41px] pb-[41px]"
           onScroll={handleScroll}
         >
           {activeProject.images.map((imageUrl, index) => (

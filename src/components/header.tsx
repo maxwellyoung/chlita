@@ -6,6 +6,17 @@ import { motion, AnimatePresence } from "framer-motion";
 export function Header({ currentTime }: { currentTime: string }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-black">
       {/* Main header bar */}
@@ -36,12 +47,13 @@ export function Header({ currentTime }: { currentTime: string }) {
                 key={item}
                 className="border-r border-black last:border-r-0 h-full flex"
               >
-                <Link
+                <a
                   href={`#${item.toLowerCase()}`}
+                  onClick={(e) => scrollToSection(e, item.toLowerCase())}
                   className="px-4 py-2 hover:underline flex items-center"
                 >
                   {item}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>

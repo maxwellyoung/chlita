@@ -69,6 +69,10 @@ export default function Home() {
     fetchProjects();
   }, [fetchProjects]);
 
+  // if (showSplash) {
+  //   return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  // }
+
   return (
     <div className="min-h-screen bg-white text-black font-sans">
       <Header currentTime={currentTime} />

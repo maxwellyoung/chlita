@@ -9,89 +9,91 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
 
   const handleClick = () => {
     setIsClicked(true);
-    // Add a slight delay before completing to allow for exit animation
-    setTimeout(onComplete, 800);
+    setTimeout(onComplete, 1000);
   };
 
   return (
     <AnimatePresence>
       {!isClicked && (
         <motion.div
-          initial={{ opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center cursor-pointer"
           onClick={handleClick}
         >
-          <motion.div
-            className="relative w-[500px] h-[500px]"
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          >
-            {/* Logo Components */}
-            <motion.div className="absolute inset-0">
-              <Image
-                src="/logo/text.svg"
-                alt="CHLITACORP"
-                width={500}
-                height={100}
-                className="w-full"
-                priority
-              />
-            </motion.div>
+          <div className="relative w-full h-screen max-h-screen flex items-center justify-center p-4">
+            <div className="relative w-full h-full max-w-[90vh] flex items-center justify-center">
+              {/* Border */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src="/logo/chlitacorp-border.svg"
+                  alt=""
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </motion.div>
 
-            {/* Jesters */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="absolute top-1/2 left-0 right-0 flex justify-center gap-12"
-            >
-              {[
-                "/logo/jester1.svg",
-                "/logo/jester2.svg",
-                "/logo/jester3.svg",
-              ].map((src, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ rotate: -10 }}
-                  animate={{ rotate: 10 }}
-                  transition={{
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    duration: 1.5,
-                    delay: i * 0.2,
-                  }}
-                >
-                  <Image src={src} alt="" width={100} height={100} />
-                </motion.div>
-              ))}
-            </motion.div>
+              {/* Main Text */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src="/logo/text-transparent.svg"
+                  alt="CH'LITA"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </motion.div>
 
-            {/* Icons at bottom */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="absolute bottom-0 left-0 right-0 flex justify-center gap-8"
-            >
-              {[
-                "/logo/symbol1.svg",
-                "/logo/globe.svg",
-                "/logo/chlita-symbol.svg",
-                "/logo/world-map.svg",
-                "/logo/symbol2.svg",
-              ].map((src, i) => (
-                <Image key={i} src={src} alt="" width={40} height={40} />
-              ))}
-            </motion.div>
-          </motion.div>
+              {/* Jesters */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src="/logo/jesters-transparent.svg"
+                  alt=""
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </motion.div>
+
+              {/* Icons */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src="/logo/chlitacorp-icons.svg"
+                  alt=""
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </motion.div>
+            </div>
+          </div>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
-            transition={{ delay: 1 }}
-            className="mt-8 text-sm text-gray-500"
+            transition={{ delay: 1.5 }}
+            className="absolute bottom-8 text-sm text-gray-500"
           >
             Click to enter
           </motion.p>

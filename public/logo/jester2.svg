@@ -1,8 +1,0 @@
-// jester2.svg (middle)
-<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <path d="M30 30 L50 10 L70 30 M50 20 V60 M30 70 C30 70 40 50 50 50 C60 50 70 70 70 70" 
-    fill="none" 
-    stroke="black" 
-    stroke-width="3"
-  />
-</svg>

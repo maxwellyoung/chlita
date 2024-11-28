@@ -40,7 +40,7 @@ export function ProjectsSection({
 
   return (
     <section id="work" className="py-24 px-4 bg-background">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-9xl mx-auto">
         <div className="flex flex-col md:flex-row md:justify-between items-center mb-12 gap-6">
           <h2 className="text-3xl font-bold text-primary">SELECTED WORKS</h2>
           <div className="flex gap-4">

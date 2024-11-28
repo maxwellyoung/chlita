@@ -9,6 +9,7 @@ import { ProjectModal } from "@/components/project-modal";
 import { AboutSection } from "@/components/about-section";
 import { ContactSection } from "@/components/contact-section";
 import { Footer } from "@/components/footer";
+import { SplashScreen } from "@/components/splash-screen";
 
 export interface Project {
   _id: string;
@@ -25,6 +26,7 @@ export default function Home() {
   const [initialImageIndex, setInitialImageIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
 
   // Update the current time every second
   useEffect(() => {
@@ -78,9 +80,9 @@ export default function Home() {
     setInitialImageIndex(index);
   };
 
-  // if (showSplash) {
-  //   return <SplashScreen onComplete={() => setShowSplash(false)} />;
-  // }
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">

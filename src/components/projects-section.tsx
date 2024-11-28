@@ -3,11 +3,16 @@
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Project } from "../app/page";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 type ViewType = "grid" | "list" | "index";
+
+const viewTypes = [
+  { type: "grid" as const, label: "GRID" },
+  { type: "list" as const, label: "LIST" },
+  { type: "index" as const, label: "INDEX" },
+];
 
 export function ProjectsSection({
   projects,
@@ -39,24 +44,19 @@ export function ProjectsSection({
         <div className="flex flex-col md:flex-row md:justify-between items-center mb-12 gap-6">
           <h2 className="text-3xl font-bold text-primary">SELECTED WORKS</h2>
           <div className="flex gap-4">
-            <ViewTypeButton
-              viewType={viewType}
-              setViewType={setViewType}
-              type="grid"
-              label="GRID"
-            />
-            <ViewTypeButton
-              viewType={viewType}
-              setViewType={setViewType}
-              type="list"
-              label="LIST"
-            />
-            <ViewTypeButton
-              viewType={viewType}
-              setViewType={setViewType}
-              type="index"
-              label="INDEX"
-            />
+            {viewTypes.map((view) => (
+              <button
+                key={view.type}
+                onClick={() => setViewType(view.type)}
+                className={`relative px-3 py-1 text-sm transition-colors ${
+                  viewType === view.type
+                    ? "text-primary font-bold"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {view.label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -89,32 +89,6 @@ export function ProjectsSection({
   );
 }
 
-function ViewTypeButton({
-  viewType,
-  setViewType,
-  type,
-  label,
-}: {
-  viewType: ViewType;
-  setViewType: (type: ViewType) => void;
-  type: ViewType;
-  label: string;
-}) {
-  return (
-    <button
-      onClick={() => setViewType(type)}
-      className={cn(
-        "px-3 py-1 transition-colors",
-        viewType === type
-          ? "font-bold text-primary"
-          : "text-muted-foreground hover:text-primary"
-      )}
-    >
-      {label}
-    </button>
-  );
-}
-
 function ProjectsLoading() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -139,6 +113,45 @@ function GridView({
     initialImageIndex?: number
   ) => void;
 }) {
+  const [projectImageIndices, setProjectImageIndices] = useState<{
+    [key: string]: number;
+  }>({});
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (project: Project) => {
+    const swipeThreshold = 50; // minimum distance for swipe
+    const swipeDistance = touchEndX.current - touchStartX.current;
+    const currentIndex = projectImageIndices[project._id] || 0;
+
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      if (swipeDistance > 0 && currentIndex > 0) {
+        // Swipe right - show previous image
+        setProjectImageIndices({
+          ...projectImageIndices,
+          [project._id]: currentIndex - 1,
+        });
+      } else if (
+        swipeDistance < 0 &&
+        currentIndex < (project.images?.length || 1) - 1
+      ) {
+        // Swipe left - show next image
+        setProjectImageIndices({
+          ...projectImageIndices,
+          [project._id]: currentIndex + 1,
+        });
+      }
+    }
+  };
+
   return (
     <motion.ul
       key="grid"
@@ -147,40 +160,61 @@ function GridView({
       exit={{ opacity: 0 }}
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
     >
-      {projects.map((project) => (
-        <motion.li
-          key={project._id}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.98 }}
-          className="cursor-pointer group"
-          onClick={() => setActiveProject(project, 0)}
-        >
-          <div className="relative overflow-hidden">
-            {project.images?.[0] && project.images[0] !== "" ? (
-              <Image
-                src={project.images[0]}
-                alt={project.title}
-                width={600}
-                height={400}
-                className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-            ) : (
-              <div className="w-full h-64 bg-muted flex items-center justify-center">
-                <span className="text-muted-foreground">No image</span>
+      {projects.map((project) => {
+        const currentImageIndex = projectImageIndices[project._id] || 0;
+
+        return (
+          <motion.li
+            key={project._id}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            className="cursor-pointer group"
+            onClick={() => setActiveProject(project, currentImageIndex)}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={() => handleTouchEnd(project)}
+          >
+            <div className="relative w-full flex items-center justify-center overflow-hidden bg-muted">
+              {project.images?.[currentImageIndex] &&
+              project.images[currentImageIndex] !== "" ? (
+                <Image
+                  src={project.images[currentImageIndex]}
+                  alt={project.title}
+                  width={600}
+                  height={800}
+                  className="w-auto max-h-[500px] transition-transform duration-300 group-hover:scale-110"
+                  style={{ objectFit: "contain" }}
+                />
+              ) : (
+                <div className="w-full aspect-[3/4] flex items-center justify-center">
+                  <span className="text-muted-foreground">No image</span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span className="text-white font-medium">View Project</span>
               </div>
-            )}
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <span className="text-white font-medium">View Project</span>
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 md:hidden">
+                {project.images?.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      index === currentImageIndex ? "bg-white" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="mt-4">
-            <h3 className="text-lg font-bold leading-tight">{project.title}</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              {project.category}
-            </p>
-          </div>
-        </motion.li>
-      ))}
+            <div className="mt-4">
+              <h3 className="text-lg font-bold leading-tight">
+                {project.title}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {project.category}
+              </p>
+            </div>
+          </motion.li>
+        );
+      })}
     </motion.ul>
   );
 }

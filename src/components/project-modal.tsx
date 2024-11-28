@@ -113,6 +113,32 @@ export function ProjectModal({
     }
   }, [activeProject, activeProject?._id, initialImageIndex]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!activeProject) return;
+
+      if (e.key === "ArrowLeft" && currentImageIndex > 0) {
+        setCurrentImageIndex((prev) => prev - 1);
+        containerRef.current?.children[currentImageIndex - 1]?.scrollIntoView({
+          behavior: "smooth",
+        });
+      } else if (
+        e.key === "ArrowRight" &&
+        currentImageIndex < activeProject.images.length - 1
+      ) {
+        setCurrentImageIndex((prev) => prev + 1);
+        containerRef.current?.children[currentImageIndex + 1]?.scrollIntoView({
+          behavior: "smooth",
+        });
+      } else if (e.key === "Escape") {
+        setActiveProject(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeProject, currentImageIndex, setActiveProject]);
+
   if (!activeProject) return null;
 
   return (

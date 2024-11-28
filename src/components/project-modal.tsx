@@ -133,9 +133,15 @@ export function ProjectModal({
               Back
             </button>
             <div className="flex justify-center items-center text-sm py-2 md:py-0">
-              <Link href="/" className="hover:underline">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveProject(null);
+                }}
+                className="hover:underline"
+              >
                 CH&apos;LITA
-              </Link>
+              </button>
               <span className="text-neutral-400 mx-2">/</span>
               <span>{activeProject.title}</span>
             </div>

@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://chlita.com"),
   title: {
     default: "Ch'lita | London-based Fashion Stylist & Consultant",
-    template: "%s | Ch'lita",
+    template: "Ch'lita | %s",
   },
   description:
     "Ch'lita is a professional fashion stylist and consultant based in London, offering personalized styling services, wardrobe consultation, and fashion direction.",
@@ -119,7 +119,7 @@ export const metadata: Metadata = {
     images: ["/chlitacorp.png"],
   },
   alternates: {
-    canonical: "https://chlita.com",
+    canonical: "/",
   },
   robots: {
     index: true,
@@ -132,6 +132,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  other: {
+    "google-site-verification": "your-verification-code",
+  },
 };
 
 export default function RootLayout({
@@ -140,7 +143,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${jost.className}`}>
+    <html lang="en" className={jost.className}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Ch'lita",
+              alternateName: "Ch'lita Fashion",
+              url: "https://chlita.com",
+            }),
+          }}
+        />
+      </head>
       <body className="font-sans antialiased">
         <GTMNoscript />
         <GTMScript />

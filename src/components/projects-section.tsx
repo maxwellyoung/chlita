@@ -16,7 +16,10 @@ export function ProjectsSection({
 }: {
   projects: Project[];
   isLoading: boolean;
-  setActiveProject: (project: Project | null) => void;
+  setActiveProject: (
+    project: Project | null,
+    initialImageIndex?: number
+  ) => void;
 }) {
   const [viewType, setViewType] = useState<ViewType>("grid");
 
@@ -131,7 +134,10 @@ function GridView({
   setActiveProject,
 }: {
   projects: Project[];
-  setActiveProject: (project: Project | null) => void;
+  setActiveProject: (
+    project: Project | null,
+    initialImageIndex?: number
+  ) => void;
 }) {
   return (
     <motion.ul
@@ -147,7 +153,7 @@ function GridView({
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
           className="cursor-pointer group"
-          onClick={() => setActiveProject(project)}
+          onClick={() => setActiveProject(project, 0)}
         >
           <div className="relative overflow-hidden">
             {project.images?.[0] && project.images[0] !== "" ? (
@@ -184,7 +190,10 @@ function ListView({
   setActiveProject,
 }: {
   projects: Project[];
-  setActiveProject: (project: Project | null) => void;
+  setActiveProject: (
+    project: Project | null,
+    initialImageIndex?: number
+  ) => void;
 }) {
   return (
     <motion.ul
@@ -199,7 +208,7 @@ function ListView({
           key={project._id}
           className="border-b border-border py-4"
           whileHover={{ x: 20 }}
-          onClick={() => setActiveProject(project)}
+          onClick={() => setActiveProject(project, 0)}
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between cursor-pointer group pr-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8">
@@ -228,7 +237,10 @@ function IndexView({
   setActiveProject,
 }: {
   projects: Project[];
-  setActiveProject: (project: Project | null) => void;
+  setActiveProject: (
+    project: Project | null,
+    initialImageIndex?: number
+  ) => void;
 }) {
   return (
     <motion.div
@@ -250,7 +262,7 @@ function IndexView({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                   className="cursor-pointer aspect-[4/3] overflow-hidden"
-                  onClick={() => setActiveProject(project)}
+                  onClick={() => setActiveProject(project, index)}
                 >
                   <Image
                     src={image}

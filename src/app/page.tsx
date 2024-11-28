@@ -22,6 +22,7 @@ export interface Project {
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [initialImageIndex, setInitialImageIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -69,6 +70,14 @@ export default function Home() {
     fetchProjects();
   }, [fetchProjects]);
 
+  const handleSetActiveProject = (
+    project: Project | null,
+    index: number = 0
+  ) => {
+    setActiveProject(project);
+    setInitialImageIndex(index);
+  };
+
   // if (showSplash) {
   //   return <SplashScreen onComplete={() => setShowSplash(false)} />;
   // }
@@ -81,11 +90,12 @@ export default function Home() {
         <ProjectsSection
           projects={projects}
           isLoading={isLoading}
-          setActiveProject={setActiveProject}
+          setActiveProject={handleSetActiveProject}
         />
         <ProjectModal
           activeProject={activeProject}
           setActiveProject={setActiveProject}
+          initialImageIndex={initialImageIndex}
         />
         <AboutSection />
         <ContactSection />

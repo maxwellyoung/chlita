@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,11 +47,13 @@ function ProjectImage({
 export function ProjectModal({
   activeProject,
   setActiveProject,
+  initialImageIndex = 0,
 }: {
   activeProject: Project | null;
   setActiveProject: (project: Project | null) => void;
+  initialImageIndex?: number;
 }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(initialImageIndex);
   const [cursorPosition, setCursorPosition] = useState<"left" | "right">(
     "left"
   );
@@ -101,11 +105,13 @@ export function ProjectModal({
   };
 
   useEffect(() => {
-    setCurrentImageIndex(0);
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0;
+    if (activeProject && containerRef.current) {
+      setCurrentImageIndex(initialImageIndex);
+      containerRef.current.children[initialImageIndex]?.scrollIntoView({
+        behavior: "instant",
+      });
     }
-  }, [activeProject?._id]);
+  }, [activeProject, activeProject?._id, initialImageIndex]);
 
   if (!activeProject) return null;
 

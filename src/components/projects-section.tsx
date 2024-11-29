@@ -39,18 +39,18 @@ export function ProjectsSection({
   });
 
   return (
-    <section id="work" className="py-24 px-4 bg-background">
-      <div className="max-w-9xl mx-auto">
-        <div className="flex flex-col md:flex-row md:justify-between items-center mb-12 gap-6">
-          <h2 className="text-3xl font-bold text-primary">SELECTED WORKS</h2>
-          <div className="flex gap-4">
+    <section id="work" className="border-t border-black">
+      <div className="px-4">
+        <div className="flex flex-col md:flex-row md:justify-between items-center py-4 border-b border-black">
+          <h2 className="font-bold">SELECTED WORKS</h2>
+          <div className="flex gap-8">
             {viewTypes.map((view) => (
               <button
                 key={view.type}
                 onClick={() => setViewType(view.type)}
-                className={`relative px-3 py-1 text-sm transition-colors ${
+                className={`transition-colors ${
                   viewType === view.type
-                    ? "text-primary font-bold"
+                    ? "font-bold"
                     : "text-muted-foreground hover:text-primary"
                 }`}
               >
@@ -158,7 +158,7 @@ function GridView({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 py-8"
     >
       {projects.map((project) => {
         const currentImageIndex = projectImageIndices[project._id] || 0;
@@ -166,15 +166,15 @@ function GridView({
         return (
           <motion.li
             key={project._id}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
             className="cursor-pointer group"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.99 }}
             onClick={() => setActiveProject(project, currentImageIndex)}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={() => handleTouchEnd(project)}
           >
-            <div className="relative w-full flex items-center justify-center overflow-hidden bg-muted">
+            <div className="relative overflow-hidden">
               {project.images?.[currentImageIndex] &&
               project.images[currentImageIndex] !== "" ? (
                 <Image
@@ -182,35 +182,35 @@ function GridView({
                   alt={project.title}
                   width={600}
                   height={800}
-                  className="w-auto max-h-[500px] transition-transform duration-300 group-hover:scale-110"
-                  style={{ objectFit: "contain" }}
+                  className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                  priority
                 />
               ) : (
-                <div className="w-full aspect-[3/4] flex items-center justify-center">
+                <div className="w-full aspect-[3/4] flex items-center justify-center bg-muted">
                   <span className="text-muted-foreground">No image</span>
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="text-white font-medium">View Project</span>
-              </div>
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 md:hidden">
                 {project.images?.map((_, index) => (
                   <div
                     key={index}
                     className={`w-1.5 h-1.5 rounded-full ${
-                      index === currentImageIndex ? "bg-white" : "bg-white/50"
+                      index === currentImageIndex ? "bg-black" : "bg-black/50"
                     }`}
                   />
                 ))}
               </div>
             </div>
-            <div className="mt-4">
-              <h3 className="text-lg font-bold leading-tight">
-                {project.title}
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                {project.category}
-              </p>
+            <div className="mt-4 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold">{project.title}</h3>
+                <p className="text-neutral-500">{project.category}</p>
+              </div>
+              <span className="text-neutral-500">
+                {new Date(
+                  project.createdAt || project._createdAt
+                ).getFullYear()}
+              </span>
             </div>
           </motion.li>
         );
@@ -235,29 +235,26 @@ function ListView({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-1"
     >
       {projects.map((project) => (
         <motion.li
           key={project._id}
-          className="border-b border-border py-4"
+          className="border-b border-black"
           whileHover={{ x: 20 }}
           onClick={() => setActiveProject(project, 0)}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between cursor-pointer group pr-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between cursor-pointer group py-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8">
-              <h3 className="text-lg font-medium">{project.title}</h3>
-              <p className="text-sm text-muted-foreground">
-                {project.category}
-              </p>
+              <h3 className="font-bold">{project.title}</h3>
+              <p className="text-neutral-500">{project.category}</p>
             </div>
             <div className="flex items-center gap-6 mt-2 sm:mt-0">
-              <span className="text-sm text-muted-foreground">
+              <span className="text-neutral-500">
                 {new Date(
                   project.createdAt || project._createdAt
                 ).getFullYear()}
               </span>
-              <ChevronRight className="text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ChevronRight className="text-black opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           </div>
         </motion.li>
@@ -282,11 +279,11 @@ function IndexView({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-16"
+      className="divide-y divide-black"
     >
       {projects.map((project) => (
-        <div key={project._id} className="space-y-4">
-          <h3 className="text-xl font-medium text-primary">{project.title}</h3>
+        <div key={project._id} className="py-8">
+          <h3 className="font-bold mb-4">{project.title}</h3>
           <motion.div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
             {project.images
               ?.filter((image) => image && image !== "")

@@ -38,7 +38,7 @@ export function AboutSection() {
               alt="Ch'lita portrait"
               width={500}
               height={750}
-              className="w-full h-auto object-cover"
+              className="w-full rounded-lg h-auto object-cover"
             />
             <motion.div
               className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"

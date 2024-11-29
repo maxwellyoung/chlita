@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { client } from "../../sanity";
 import { Header } from "@/components/header";
-import { HeroSection } from "@/components/hero-section";
 import { ProjectsSection } from "@/components/projects-section";
 import { ProjectModal } from "@/components/project-modal";
 import { AboutSection } from "@/components/about-section";
@@ -88,7 +87,6 @@ export default function Home() {
     <div className="min-h-screen bg-white text-black font-sans">
       <Header currentTime={currentTime} />
       <main className="pt-16">
-        {/* <HeroSection /> */}
         <ProjectsSection
           projects={projects}
           isLoading={isLoading}

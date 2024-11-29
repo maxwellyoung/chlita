@@ -73,8 +73,17 @@
     scroll-snap-type: y mandatory;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   .snap-start {
     scroll-snap-align: start;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
 }

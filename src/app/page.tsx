@@ -88,7 +88,7 @@ export default function Home() {
     <div className="min-h-screen bg-white text-black font-sans">
       <Header currentTime={currentTime} />
       <main className="pt-16">
-        <HeroSection />
+        {/* <HeroSection /> */}
         <ProjectsSection
           projects={projects}
           isLoading={isLoading}

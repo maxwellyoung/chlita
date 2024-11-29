@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { useState } from "react";
+import { LogoAnimation } from "./logo-animation";
 
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [isClicked, setIsClicked] = useState(false);
@@ -22,71 +22,17 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
           className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center cursor-pointer"
           onClick={handleClick}
         >
-          <div className="relative w-full h-screen max-h-screen flex items-center justify-center p-4">
-            <div className="relative w-full h-full max-w-[90vh] flex items-center justify-center">
-              {/* Border */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src="/logo/chlitacorp-border.svg"
-                  alt=""
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </motion.div>
+          <div className="relative w-full h-screen max-h-screen flex flex-col items-center justify-center p-4 gap-8">
+            <LogoAnimation />
 
-              {/* Main Text */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src="/logo/text-transparent.svg"
-                  alt="CH'LITA"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </motion.div>
-
-              {/* Jesters */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src="/logo/jesters-transparent.svg"
-                  alt=""
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </motion.div>
-
-              {/* Icons */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src="/logo/chlitacorp-icons.svg"
-                  alt=""
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </motion.div>
-            </div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+              className="text-xl md:text-2xl text-center max-w-2xl"
+            >
+              Ch&apos;lita is a London-based stylist & designer.
+            </motion.p>
           </div>
 
           <motion.p

@@ -14,6 +14,17 @@ const viewTypes = [
   { type: "index" as const, label: "INDEX" },
 ];
 
+interface CategoryMap {
+  [key: string]: string[];
+}
+
+const categoryMapping: CategoryMap = {
+  STYLING: ["STYLING & DESIGN CONSULTANCY", "STYLING & PHOTO", "STYLING"],
+  PHOTOGRAPHY: ["PHOTOGRAPHY", "STYLING & PHOTO"],
+  DESIGN: ["STYLING & DESIGN CONSULTANCY", "DESIGN"],
+  ALL: [], // Will include everything
+};
+
 export function ProjectsSection({
   projects,
   isLoading,
@@ -27,28 +38,55 @@ export function ProjectsSection({
   ) => void;
 }) {
   const [viewType, setViewType] = useState<ViewType>("grid");
+  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  const categories = Object.keys(categoryMapping);
 
-  const sortedProjects = [...projects].sort((a, b) => {
-    const dateA = a.createdAt
-      ? new Date(a.createdAt).getTime()
-      : new Date(a._createdAt).getTime();
-    const dateB = b.createdAt
-      ? new Date(b.createdAt).getTime()
-      : new Date(b._createdAt).getTime();
-    return dateB - dateA;
-  });
+  const filteredProjects = [...projects]
+    .filter((project) => {
+      if (selectedCategory === "ALL") return true;
+      return categoryMapping[selectedCategory]?.some((cat) =>
+        project.category.toUpperCase().includes(cat)
+      );
+    })
+    .sort((a, b) => {
+      const dateA = a.createdAt
+        ? new Date(a.createdAt).getTime()
+        : new Date(a._createdAt).getTime();
+      const dateB = b.createdAt
+        ? new Date(b.createdAt).getTime()
+        : new Date(b._createdAt).getTime();
+      return dateB - dateA;
+    });
 
   return (
     <section id="work" className="border-t border-black">
-      <div className="px-4">
-        <div className="flex flex-col md:flex-row md:justify-between items-center py-4 border-b border-black">
-          <h2 className="font-bold">SELECTED WORKS</h2>
-          <div className="flex gap-8">
+      <div>
+        {/* Single row with categories on left, view types on right */}
+        <div className="flex justify-between border-b border-black">
+          {/* Categories on the left */}
+          <div className="flex">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 border-r border-black transition-colors ${
+                  selectedCategory === category
+                    ? "font-bold"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* View types on the right */}
+          <div className="flex">
             {viewTypes.map((view) => (
               <button
                 key={view.type}
                 onClick={() => setViewType(view.type)}
-                className={`transition-colors ${
+                className={`px-4 py-2 border-l border-black transition-colors ${
                   viewType === view.type
                     ? "font-bold"
                     : "text-muted-foreground hover:text-primary"
@@ -60,30 +98,33 @@ export function ProjectsSection({
           </div>
         </div>
 
-        {isLoading ? (
-          <ProjectsLoading />
-        ) : (
-          <AnimatePresence mode="wait">
-            {viewType === "grid" && (
-              <GridView
-                projects={sortedProjects}
-                setActiveProject={setActiveProject}
-              />
-            )}
-            {viewType === "list" && (
-              <ListView
-                projects={sortedProjects}
-                setActiveProject={setActiveProject}
-              />
-            )}
-            {viewType === "index" && (
-              <IndexView
-                projects={sortedProjects}
-                setActiveProject={setActiveProject}
-              />
-            )}
-          </AnimatePresence>
-        )}
+        {/* Projects content */}
+        <div className="px-4">
+          {isLoading ? (
+            <ProjectsLoading />
+          ) : (
+            <AnimatePresence mode="wait">
+              {viewType === "grid" && (
+                <GridView
+                  projects={filteredProjects}
+                  setActiveProject={setActiveProject}
+                />
+              )}
+              {viewType === "list" && (
+                <ListView
+                  projects={filteredProjects}
+                  setActiveProject={setActiveProject}
+                />
+              )}
+              {viewType === "index" && (
+                <IndexView
+                  projects={filteredProjects}
+                  setActiveProject={setActiveProject}
+                />
+              )}
+            </AnimatePresence>
+          )}
+        </div>
       </div>
     </section>
   );

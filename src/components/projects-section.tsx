@@ -61,40 +61,50 @@ export function ProjectsSection({
   return (
     <section id="work" className="border-t border-black">
       <div>
-        {/* Single row with categories on left, view types on right */}
-        <div className="flex justify-between border-b border-black">
-          {/* Categories on the left */}
-          <div className="flex">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 border-r border-black transition-colors ${
-                  selectedCategory === category
-                    ? "font-bold"
-                    : "text-muted-foreground hover:text-primary"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+        {/* Responsive header with scrollable containers */}
+        <div className="flex flex-col sm:flex-row sm:justify-between border-b border-black">
+          {/* Categories - scrollable on mobile */}
+          <div className="flex-1 overflow-x-auto scrollbar-hide border-b sm:border-b-0 border-black">
+            <div className="flex min-w-max">
+              {categories.map((category, index) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 whitespace-nowrap ${
+                    index !== categories.length - 1
+                      ? "border-r border-black"
+                      : ""
+                  } transition-colors ${
+                    selectedCategory === category
+                      ? "font-bold"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* View types on the right */}
-          <div className="flex">
-            {viewTypes.map((view) => (
-              <button
-                key={view.type}
-                onClick={() => setViewType(view.type)}
-                className={`px-4 py-2 border-l border-black transition-colors ${
-                  viewType === view.type
-                    ? "font-bold"
-                    : "text-muted-foreground hover:text-primary"
-                }`}
-              >
-                {view.label}
-              </button>
-            ))}
+          {/* View types - scrollable on mobile */}
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex min-w-max">
+              {viewTypes.map((view, index) => (
+                <button
+                  key={view.type}
+                  onClick={() => setViewType(view.type)}
+                  className={`px-4 py-2 whitespace-nowrap ${
+                    index !== 0 ? "border-l border-black" : ""
+                  } transition-colors ${
+                    viewType === view.type
+                      ? "font-bold"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  {view.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

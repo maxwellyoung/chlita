@@ -43,32 +43,36 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch projects from Sanity
+  // Fetch projects from Sanity with better error handling
   const fetchProjects = useCallback(async () => {
     setIsLoading(true);
     try {
-      const result = await client.fetch<Project[]>(`
-        *[_type == "project"] {
-          _id,
-          title,
-          category,
-          "images": images[].asset->url,
-          createdAt,
-          _createdAt
-        }
-      `);
-      setProjects(result);
+      const query = `*[_type == "project"] | order(_createdAt desc) {
+        _id,
+        title,
+        category,
+        "images": images[].asset->url,
+        createdAt,
+        _createdAt
+      }`;
+
+      const result = await client.fetch<Project[]>(query);
+      setProjects(result || []);
     } catch (error) {
       console.error("Error fetching projects:", error);
-      // Optionally handle the error, e.g., show a notification or fallback UI
+      setProjects([]);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Fetch projects on component mount
+  // Add error boundary for the entire component
   useEffect(() => {
-    fetchProjects();
+    fetchProjects().catch((error) => {
+      console.error("Failed to fetch projects:", error);
+      setProjects([]);
+      setIsLoading(false);
+    });
   }, [fetchProjects]);
 
   const handleSetActiveProject = (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { client } from "../../sanity";
 import { Header } from "@/components/header";
 import { ProjectsSection } from "@/components/projects-section";
@@ -19,7 +19,7 @@ export interface Project {
   _createdAt: string; // Sanity's automatic creation timestamp
 }
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -88,5 +88,19 @@ export default function Home() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <HomeContent />
+    </Suspense>
   );
 }

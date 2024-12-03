@@ -15,27 +15,14 @@ export interface Project {
   title: string;
   category: string;
   images: string[];
-  createdAt?: string; // Optional manually-set date field
-  _createdAt: string; // Sanity's automatic creation timestamp
+  createdAt?: string;
+  _createdAt: string;
 }
 
 function HomeContent() {
-  const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
-  const [showSplash, setShowSplash] = useState(false);
-
-  // Check for first visit on mount
-  useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisited");
-    const isFromProject = searchParams.get("from") === "project";
-
-    if (!hasVisited && !isFromProject) {
-      setShowSplash(true);
-      localStorage.setItem("hasVisited", "true");
-    }
-  }, [searchParams]);
 
   // Update the current time every second
   useEffect(() => {
@@ -53,7 +40,7 @@ function HomeContent() {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch projects from Sanity with better error handling
+  // Fetch projects from Sanity
   const fetchProjects = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -76,7 +63,6 @@ function HomeContent() {
     }
   }, []);
 
-  // Add error boundary for the entire component
   useEffect(() => {
     fetchProjects().catch((error) => {
       console.error("Failed to fetch projects:", error);
@@ -84,10 +70,6 @@ function HomeContent() {
       setIsLoading(false);
     });
   }, [fetchProjects]);
-
-  if (showSplash) {
-    return <SplashScreen onComplete={() => setShowSplash(false)} />;
-  }
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -103,6 +85,31 @@ function HomeContent() {
 }
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const [showSplash, setShowSplash] = useState(true); // Start with true to prevent flash
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    const isFromProject = searchParams.get("from") === "project";
+
+    if (hasVisited || isFromProject) {
+      setShowSplash(false);
+    } else {
+      localStorage.setItem("hasVisited", "true");
+    }
+    setIsInitialized(true);
+  }, [searchParams]);
+
+  // Don't render anything until we've checked localStorage
+  if (!isInitialized) {
+    return null;
+  }
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
+
   return (
     <Suspense
       fallback={

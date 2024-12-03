@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Project } from "../app/page";
 import { useState, useRef } from "react";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type ViewType = "grid" | "list" | "index";
 
@@ -25,18 +26,16 @@ const categoryMapping: CategoryMap = {
   ALL: [], // Will include everything
 };
 
+type ProjectClickHandler = (project: Project, imageIndex?: number) => void;
+
 export function ProjectsSection({
   projects,
   isLoading,
-  setActiveProject,
 }: {
   projects: Project[];
   isLoading: boolean;
-  setActiveProject: (
-    project: Project | null,
-    initialImageIndex?: number
-  ) => void;
 }) {
+  const router = useRouter();
   const [viewType, setViewType] = useState<ViewType>("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
   const categories = Object.keys(categoryMapping);
@@ -57,6 +56,15 @@ export function ProjectsSection({
         : new Date(b._createdAt).getTime();
       return dateB - dateA;
     });
+
+  const handleProjectClick = (project: Project, imageIndex?: number) => {
+    console.log("Navigating with index:", imageIndex);
+    router.push(
+      `/projects/${project._id}?from=grid${
+        typeof imageIndex === "number" ? `&imageIndex=${imageIndex}` : ""
+      }`
+    );
+  };
 
   return (
     <section id="work" className="border-t border-black">
@@ -117,19 +125,19 @@ export function ProjectsSection({
               {viewType === "grid" && (
                 <GridView
                   projects={filteredProjects}
-                  setActiveProject={setActiveProject}
+                  onProjectClick={handleProjectClick}
                 />
               )}
               {viewType === "list" && (
                 <ListView
                   projects={filteredProjects}
-                  setActiveProject={setActiveProject}
+                  onProjectClick={handleProjectClick}
                 />
               )}
               {viewType === "index" && (
                 <IndexView
                   projects={filteredProjects}
-                  setActiveProject={setActiveProject}
+                  onProjectClick={handleProjectClick}
                 />
               )}
             </AnimatePresence>
@@ -156,13 +164,10 @@ function ProjectsLoading() {
 
 function GridView({
   projects,
-  setActiveProject,
+  onProjectClick,
 }: {
   projects: Project[];
-  setActiveProject: (
-    project: Project | null,
-    initialImageIndex?: number
-  ) => void;
+  onProjectClick: ProjectClickHandler;
 }) {
   const [projectImageIndices, setProjectImageIndices] = useState<{
     [key: string]: number;
@@ -220,14 +225,13 @@ function GridView({
             className="cursor-pointer group"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.99 }}
-            onClick={() => setActiveProject(project, currentImageIndex)}
+            onClick={() => onProjectClick(project)}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={() => handleTouchEnd(project)}
           >
             <div className="relative overflow-hidden">
-              {project.images?.[currentImageIndex] &&
-              project.images[currentImageIndex] !== "" ? (
+              {project.images?.[currentImageIndex] ? (
                 <Image
                   src={project.images[currentImageIndex]}
                   alt={project.title}
@@ -272,13 +276,10 @@ function GridView({
 
 function ListView({
   projects,
-  setActiveProject,
+  onProjectClick,
 }: {
   projects: Project[];
-  setActiveProject: (
-    project: Project | null,
-    initialImageIndex?: number
-  ) => void;
+  onProjectClick: ProjectClickHandler;
 }) {
   return (
     <motion.ul
@@ -292,7 +293,7 @@ function ListView({
           key={project._id}
           className="border-b border-black"
           whileHover={{ x: 20 }}
-          onClick={() => setActiveProject(project, 0)}
+          onClick={() => onProjectClick(project)}
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between cursor-pointer group py-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8">
@@ -316,13 +317,10 @@ function ListView({
 
 function IndexView({
   projects,
-  setActiveProject,
+  onProjectClick,
 }: {
   projects: Project[];
-  setActiveProject: (
-    project: Project | null,
-    initialImageIndex?: number
-  ) => void;
+  onProjectClick: ProjectClickHandler;
 }) {
   return (
     <motion.div
@@ -344,7 +342,10 @@ function IndexView({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                   className="cursor-pointer aspect-[4/3] overflow-hidden"
-                  onClick={() => setActiveProject(project, index)}
+                  onClick={() => {
+                    console.log("Clicked image index:", index);
+                    onProjectClick(project, index);
+                  }}
                 >
                   <Image
                     src={image}

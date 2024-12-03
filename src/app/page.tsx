@@ -4,11 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import { client } from "../../sanity";
 import { Header } from "@/components/header";
 import { ProjectsSection } from "@/components/projects-section";
-import { ProjectModal } from "@/components/project-modal";
 import { AboutSection } from "@/components/about-section";
 import { ContactSection } from "@/components/contact-section";
 import { Footer } from "@/components/footer";
 import { SplashScreen } from "@/components/splash-screen";
+import { useSearchParams } from "next/navigation";
 
 export interface Project {
   _id: string;
@@ -20,12 +20,11 @@ export interface Project {
 }
 
 export default function Home() {
+  const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
-  const [activeProject, setActiveProject] = useState<Project | null>(null);
-  const [initialImageIndex, setInitialImageIndex] = useState(0);
-  const [currentTime, setCurrentTime] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [showSplash, setShowSplash] = useState(true);
+  const [currentTime, setCurrentTime] = useState("");
+  const [showSplash, setShowSplash] = useState(!searchParams.get("from"));
 
   // Update the current time every second
   useEffect(() => {
@@ -75,14 +74,6 @@ export default function Home() {
     });
   }, [fetchProjects]);
 
-  const handleSetActiveProject = (
-    project: Project | null,
-    index: number = 0
-  ) => {
-    setActiveProject(project);
-    setInitialImageIndex(index);
-  };
-
   if (showSplash) {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
   }
@@ -91,16 +82,7 @@ export default function Home() {
     <div className="min-h-screen bg-white text-black font-sans">
       <Header currentTime={currentTime} />
       <main className="pt-16">
-        <ProjectsSection
-          projects={projects}
-          isLoading={isLoading}
-          setActiveProject={handleSetActiveProject}
-        />
-        <ProjectModal
-          activeProject={activeProject}
-          setActiveProject={setActiveProject}
-          initialImageIndex={initialImageIndex}
-        />
+        <ProjectsSection projects={projects} isLoading={isLoading} />
         <AboutSection />
         <ContactSection />
       </main>

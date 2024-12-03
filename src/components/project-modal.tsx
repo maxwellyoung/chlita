@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { AnimatedNumber } from "./animated-number";
 import { Project } from "../app/page";
 
@@ -16,6 +16,8 @@ function ProjectImage({
   priority?: boolean;
 }) {
   const [isLoading, setIsLoading] = useState(true);
+
+  if (!src) return null;
 
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -139,76 +141,95 @@ export function ProjectModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeProject, currentImageIndex, setActiveProject]);
 
+  const onDragEnd = (
+    event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
+    if (Math.abs(info.offset.x) > 100 || Math.abs(info.velocity.x) > 500) {
+      setActiveProject(null);
+    }
+  };
+
   if (!activeProject) return null;
 
   return (
     <AnimatePresence>
-      <motion.div
-        className={`fixed inset-0 bg-white z-50 ${
-          cursorPosition === "left"
-            ? 'cursor-[url("/cursor-left.svg"),_w-resize]'
-            : 'cursor-[url("/cursor-right.svg"),_e-resize]'
-        }`}
-        onMouseMove={handleMouseMove}
-        onClick={handleClick}
-      >
-        <header className="fixed top-0 left-0 w-full z-50 bg-white">
-          <div className="grid grid-cols-[auto,1fr,auto] md:grid-cols-[auto,1fr,auto] h-auto md:h-[41px] border-b border-black">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setActiveProject(null);
-              }}
-              className="px-4 py-2 text-sm border-r border-black hover:underline"
-            >
-              Back
-            </button>
-            <div className="flex justify-center items-center text-sm py-2 md:py-0">
+      {activeProject && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={`fixed inset-0 bg-white z-50 overflow-y-auto ${
+            cursorPosition === "left"
+              ? 'cursor-[url("/cursor-left.svg"),_w-resize]'
+              : 'cursor-[url("/cursor-right.svg"),_e-resize]'
+          }`}
+          onMouseMove={handleMouseMove}
+          onClick={handleClick}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.2}
+          onDragEnd={onDragEnd}
+          dragMomentum={false}
+        >
+          <header className="fixed top-0 left-0 w-full z-50 bg-white">
+            <div className="grid grid-cols-[auto,1fr,auto] md:grid-cols-[auto,1fr,auto] h-auto md:h-[41px] border-b border-black">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveProject(null);
                 }}
-                className="hover:underline"
+                className="px-4 py-2 text-sm border-r border-black hover:underline"
               >
-                CH&apos;LITA
+                Back
               </button>
-            </div>
-            <div className="flex flex-col md:flex-row border-l border-black h-full">
-              <div className="px-4 py-2 text-sm flex items-center justify-center md:justify-start h-full">
-                <AnimatedNumber value={currentImageIndex + 1} />
-                {"/"}
-                {activeProject.images.length}
+              <div className="flex justify-center items-center text-sm py-2 md:py-0">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveProject(null);
+                  }}
+                  className="hover:underline"
+                >
+                  CH&apos;LITA
+                </button>
+              </div>
+              <div className="flex flex-col md:flex-row border-l border-black h-full">
+                <div className="px-4 py-2 text-sm flex items-center justify-center md:justify-start h-full">
+                  <AnimatedNumber value={currentImageIndex + 1} />
+                  {"/"}
+                  {activeProject.images.length}
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t border-black">
-          <div className="px-4 py-2 text-center">
-            <h2 className="text-sm">{activeProject.title}</h2>
-          </div>
-        </div>
-
-        <div
-          ref={containerRef}
-          className="h-screen overflow-y-auto snap-y snap-mandatory pt-[82px] md:pt-[41px] pb-[41px]"
-          onScroll={handleScroll}
-        >
-          {activeProject.images.map((imageUrl, index) => (
-            <div
-              key={index}
-              className="h-screen w-full snap-start flex items-center justify-center p-4"
-            >
-              <ProjectImage
-                src={imageUrl}
-                alt={`${activeProject.title} ${index + 1}`}
-                priority={index === 0}
-              />
+          <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t border-black">
+            <div className="px-4 py-2 text-center">
+              <h2 className="text-sm">{activeProject.title}</h2>
             </div>
-          ))}
-        </div>
-      </motion.div>
+          </div>
+
+          <div
+            ref={containerRef}
+            className="h-screen overflow-y-auto snap-y snap-mandatory pt-[82px] md:pt-[41px] pb-[41px]"
+            onScroll={handleScroll}
+          >
+            {activeProject.images.filter(Boolean).map((imageUrl, index) => (
+              <div
+                key={index}
+                className="h-screen w-full snap-start flex items-center justify-center p-4"
+              >
+                <ProjectImage
+                  src={imageUrl}
+                  alt={`${activeProject.title} ${index + 1}`}
+                  priority={index === 0}
+                />
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }

@@ -24,7 +24,18 @@ function HomeContent() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
-  const [showSplash, setShowSplash] = useState(!searchParams.get("from"));
+  const [showSplash, setShowSplash] = useState(false);
+
+  // Check for first visit on mount
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    const isFromProject = searchParams.get("from") === "project";
+
+    if (!hasVisited && !isFromProject) {
+      setShowSplash(true);
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, [searchParams]);
 
   // Update the current time every second
   useEffect(() => {

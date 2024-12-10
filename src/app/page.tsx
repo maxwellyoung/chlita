@@ -86,22 +86,17 @@ function HomeContent() {
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const [showSplash, setShowSplash] = useState(true); // Start with true to prevent flash
+  const [showSplash, setShowSplash] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisited");
+    // Only skip splash if coming from a project page
     const isFromProject = searchParams.get("from") === "project";
-
-    if (hasVisited || isFromProject) {
-      setShowSplash(false);
-    } else {
-      localStorage.setItem("hasVisited", "true");
-    }
+    setShowSplash(!isFromProject);
     setIsInitialized(true);
   }, [searchParams]);
 
-  // Don't render anything until we've checked localStorage
+  // Don't render anything until we've checked the conditions
   if (!isInitialized) {
     return null;
   }
